@@ -7,122 +7,63 @@ L'architecture est composée de quatre services principaux :
 
 ###  **Eureka Server**
 
--   Rôle : registre central où les microservices se déclarent.\
--   Permet le **découplage**, la **découverte dynamique** et le **load
-    balancing**.\
+-   Rôle : registre central où les microservices se déclarent.
+-   Permet le **découplage**, la **découverte dynamique** et le **load balancing**.
 -   Port par défaut : **8761**
 
 Accès :\
-👉 `http://localhost:8761`
+ `http://localhost:8761`
 
 ------------------------------------------------------------------------
 
-###  **SERVICE-CLIENT**
+###  **client-service**
 
--   Gère les opérations CRUD liées aux **clients**.\
--   Persisté dans une base MySQL : **clientservicedb**\
--   S'enregistre automatiquement auprès d'Eureka.\
--   Port : **8081**
+-   Gère les opérations CRUD liées aux **clients**
+-   Persisté dans une base MySQL : **clientservicedb**
+-   S'enregistre automatiquement auprès d'Eureka
+  
+<img width="607" height="904" alt="jssssssss" src="https://github.com/user-attachments/assets/362db5d5-f019-40dc-ae2e-99238c9acac7" />
 
 Via Gateway :\
-👉 `http://localhost:8888/SERVICE-CLIENT/api/client`
+ `http://localhost:8888/client-service/api/client`
+ 
 
 ------------------------------------------------------------------------
 
-###  **SERVICE-CAR**
+###  **voiture-service**
 
--   Gestion des **voitures**.\
+-   Gestion des **voitures**.
 -   Chaque voiture est liée à un client, nécessitant un appel REST vers
-    SERVICE-CLIENT.\
--   Base MySQL : **carservicedb**\
--   Port : **8082**
+    SERVICE-CLIENT.
+-   Base MySQL : **carservicedb**
+
+<img width="516" height="691" alt="kaaaassssss" src="https://github.com/user-attachments/assets/aed38a4d-c06d-4993-9728-1cdaef1d12aa" />
 
 Via Gateway :\
-👉 `http://localhost:8888/SERVICE-CAR/api/car`
+ `http://localhost:8888/voiture-service/api/car`
 
 ------------------------------------------------------------------------
 
 ###  **API Gateway -- Spring Cloud Gateway**
 
--   Point d'entrée unique pour tous les microservices.\
--   Routage basé sur les noms de services enregistrés dans Eureka.\
--   Simplifie l'accès et protège l'architecture.\
+-   Point d'entrée unique pour tous les microservices.
+-   Routage basé sur les noms de services enregistrés dans Eureka.
+-   Simplifie l'accès et protège l'architecture.
 -   Port : **8888**
 
 ------------------------------------------------------------------------
 
+##  Lancement 
 
-
-
-## ⚙️ Points essentiels de la configuration
-
-### 🔸 Serveur Eureka
-
--   Active avec `@EnableEurekaServer`
--   N'est pas enregistré en tant que client
--   Fichier `application.yml` configuré pour le port **8761**
-
-### 🔸 Microservices CLIENT & CAR
-
--   Annotés avec `@EnableEurekaClient` ou découverte auto selon Spring
-    Boot 3.x\
--   Communication inter-service via **RestTemplate** ou **Feign**
--   Configurations distinctes pour MySQL et Eureka
-
-### 🔸 Gateway
-
--   Routage dynamique basé sur Eureka, par exemple :
-
-``` yaml
-  - id: client_service
-    uri: lb://SERVICE-CLIENT
-    predicates:
-      - Path=/SERVICE-CLIENT/**
-```
-
-------------------------------------------------------------------------
-
-## 🗄️ Structure des bases de données
-
-### Base `clientservicedb`
-
-  Champ   Type
-  ------- --------
-  id      Long
-  name    String
-  email   String
-
-### Base `carservicedb`
-
-  Champ       Type
-  ----------- --------
-  id          Long
-  model       String
-  matricule   String
-  clientId    Long
-
-Le service CAR interroge le service CLIENT pour enrichir les données.
-
-------------------------------------------------------------------------
-
-## ▶️ Lancement
-
-Ordre recommandé : 1. Eureka Server\
-2. SERVICE-CLIENT\
-3. SERVICE-CAR\
+1. Eureka Server
+2. SERVICE-CLIENT
+3. SERVICE-CAR
 4. Gateway
+<img width="898" height="425" alt="lance" src="https://github.com/user-attachments/assets/4f81a4f7-4094-47ae-b950-3072df6de803" />
 
 Eureka affichera les microservices enregistrés et prêts à l'emploi.
 
 ------------------------------------------------------------------------
 
-## 🎯 Conclusion
-
-Ce projet illustre les principes essentiels des architectures
-microservices modernes : - découverte dynamique, - communication
-inter-service, - routage centralisé, - modularité, - extensibilité.
-
-Il constitue une base solide pour développer des systèmes distribués
-professionnels.
 
 
